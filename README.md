@@ -188,7 +188,9 @@ This effort resulted in a polished, scalable system built from scratch.
 9. Developer Information
 
 Eman Khamdan
+
 Bahrain Polytechnic
+
 Student ID: 202200542
 
 10. Conclusion
