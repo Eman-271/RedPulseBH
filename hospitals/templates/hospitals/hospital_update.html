@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Hospital – RedPulseBH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rp-primary: #7a0013;
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+        }
+
+        .title-bar {
+            background: var(--rp-primary);
+            color: white;
+            padding: 1rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="title-bar text-center">
+        <h2>Edit Hospital</h2>
+    </div>
+
+    <div class="container py-4">
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Hospital Name -->
+            <div class="mb-3">
+                <label class="form-label">Hospital Name</label>
+                <input type="text" name="name" class="form-control" value="{{ hospital.name }}" required>
+            </div>
+
+            <!-- Hospital Type -->
+            <div class="mb-3">
+                <label class="form-label">Hospital Type</label>
+                <select name="hospital_type" class="form-select" required>
+                    <option value="government" {% if hospital.hospital_type == "government" %}selected{% endif %}>
+                        Government Hospital
+                    </option>
+                    <option value="private" {% if hospital.hospital_type == "private" %}selected{% endif %}>
+                        Private Hospital
+                    </option>
+                    <option value="clinic" {% if hospital.hospital_type == "clinic" %}selected{% endif %}>
+                        Clinic / Medical Center
+                    </option>
+                    <option value="lab" {% if hospital.hospital_type == "lab" %}selected{% endif %}>
+                        Diagnostic Lab
+                    </option>
+                </select>
+            </div>
+
+            <!-- License Number -->
+            <div class="mb-3">
+                <label class="form-label">License Number</label>
+                <input type="text" name="licence_number" class="form-control" maxlength="8"
+                    value="{{ hospital.licence_number }}" required>
+            </div>
+
+            <!-- City -->
+            <div class="mb-3">
+                <label class="form-label">City / Area</label>
+                <input type="text" name="city_area" class="form-control" value="{{ hospital.city_area }}" required>
+            </div>
+
+            <!-- Full Address -->
+            <div class="mb-3">
+                <label class="form-label">Full Address</label>
+                <textarea name="full_address" class="form-control" rows="3" required>{{ hospital.full_address }}</textarea>
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" name="phone" class="form-control" value="{{ hospital.phone }}" required>
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" value="{{ hospital.email }}" required>
+            </div>
+
+            <hr>
+
+            <!-- Action Buttons -->
+            <button type="submit" class="btn btn-danger btn-pill">Save Changes</button>
+            <a href="{% url 'hospital_list' %}" class="btn btn-outline-dark btn-pill">Cancel</a>
+
+        </form>
+    </div>
+
+</body>
+
+</html>

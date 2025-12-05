@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedPulseBH – Hospital Sign Up</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rp-primary: #7a0013;
+            --rp-primary-dark: #3a0007;
+            --rp-accent: #ffc107;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-header {
+            background: radial-gradient(circle at top left, #9c0020, var(--rp-primary-dark));
+            color: #fff;
+            padding: 2.5rem 0 2.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin-bottom: 0;
+            max-width: 650px;
+        }
+
+        .page-header .section-label {
+            color: var(--rp-accent);
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: .11em;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .trust-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .5rem .9rem;
+            border-radius: 999px;
+            background-color: #fff;
+            color: #111;
+            font-size: .85rem;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .trust-badge i {
+            font-size: 1rem;
+        }
+
+        .form-card {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+            padding-inline: 1.3rem;
+        }
+
+        footer {
+            background: #111;
+            color: #ccc;
+            padding: .9rem 0;
+            margin-top: 3rem;
+        }
+
+        .city-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .city-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            z-index: 1050;
+            max-height: 260px;
+            overflow-y: auto;
+            padding: .25rem 0;
+            display: none;
+        }
+
+        .city-dropdown-menu.show {
+            display: block;
+        }
+
+        .city-group-title {
+            font-size: .75rem;
+            font-weight: 600;
+            padding: .35rem 1rem .15rem;
+            text-transform: uppercase;
+            color: #6c757d;
+        }
+
+        .city-item {
+            width: 100%;
+            text-align: left;
+            border: 0;
+            background: transparent;
+            padding: .35rem 1rem;
+            font-size: .9rem;
+        }
+
+        .city-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .was-validated .form-control:valid,
+        .was-validated .form-select:valid,
+        .form-control.is-valid,
+        .form-select.is-valid {
+            border-color: #ced4da !important;
+            background-image: none !important;
+            box-shadow: none !important;
+        }
+
+        .no-validation.is-valid,
+        .no-validation.is-invalid,
+        .was-validated .no-validation:valid,
+        .was-validated .no-validation:invalid {
+            border-color: #ced4da !important;
+            background-image: none !important;
+            box-shadow: none !important;
+        }
+
+        .account-section {
+            background-color: #f8f9fa;
+            border-radius: 0.75rem;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .account-section h5 {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .account-section h5 i {
+            color: var(--rp-primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+   <!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">RedPulseBH</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                <!-- Main links go to sections on the HOME page -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#top">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#how">How it works</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#stats">Statistics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#faq">FAQ</a>
+                </li>
+
+                <!-- Donor Login -->
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'donor_login' %}">
+                        Donor Login
+                    </a>
+                </li>
+
+                <!-- Hospital Login -->
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'hospital_login' %}">
+                        Hospital Login
+                    </a>
+                </li>
+
+                <!-- Donor Sign Up -->
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-light btn-sm btn-pill" href="{% url 'donor_signup' %}">
+                        Donor Sign Up
+                    </a>
+                </li>
+
+                <!-- Hospital Sign Up -->
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-light btn-sm btn-pill" href="{% url 'hospital_signup' %}">
+                        Hospital Sign Up
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+    <!-- PAGE HEADER -->
+    <header class="page-header">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-7">
+                    <p class="section-label mb-2">Hospital Sign Up</p>
+                    <h1 class="mb-2">Create a Verified Hospital Account</h1>
+                    <p class="opacity-75">
+                        Complete this form to register your hospital or medical center on RedPulseBH.
+                        Your team will be able to create urgent blood requests and contact suitable donors
+                        across Bahrain.
+                    </p>
+                </div>
+                <div class="col-lg-5 text-lg-end">
+                    <span class="trust-badge">
+                        <i class="bi bi-shield-lock text-success"></i>
+                        Hospital data is shared only with authorized health authorities.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FORM SECTION -->
+    <main class="pb-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-7">
+                    <div class="form-card">
+
+                        <form class="needs-validation" method="POST" novalidate>
+                            {% csrf_token %}
+
+                            <!-- Hospital details -->
+                            <h5 class="mb-3">Hospital Details</h5>
+
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Hospital Name</label>
+                                <input type="text" id="name" name="name" class="form-control"
+                                       placeholder="e.g. Jidhafs Maternity Hospital"
+                                       value="{{ form_data.name|default_if_none:'' }}" required>
+                                <div class="invalid-feedback">
+                                    Please enter the hospital name.
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="hospital_type" class="form-label">Hospital Type</label>
+                                    <select id="hospital_type" name="hospital_type" class="form-select" required>
+                                        <option value="" disabled {% if not form_data.hospital_type %}selected{% endif %}>Select type</option>
+                                        <option value="government" {% if form_data.hospital_type == 'government' %}selected{% endif %}>Government Hospital</option>
+                                        <option value="private" {% if form_data.hospital_type == 'private' %}selected{% endif %}>Private Hospital</option>
+                                        <option value="clinic" {% if form_data.hospital_type == 'clinic' %}selected{% endif %}>Clinic / Medical Center</option>
+                                        <option value="lab" {% if form_data.hospital_type == 'lab' %}selected{% endif %}>Diagnostic Lab</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select the hospital type.
+                                    </div>
+                                    {% if errors.hospital_type %}
+                                    <div class="text-danger small mt-1">{{ errors.hospital_type }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="licence_number" class="form-label">
+                                        License / CR Number
+                                    </label>
+                                    <input type="text" id="licence_number" name="licence_number" class="form-control"
+                                           placeholder="e.g. 88888999"
+                                           value="{{ form_data.licence_number|default_if_none:'' }}"
+                                           required pattern="^[0-9]{8}$" maxlength="8">
+                                    <div class="invalid-feedback">
+                                        Please enter a valid 8-digit CR / License number.
+                                    </div>
+                                    {% if errors.licence_number %}
+                                    <div class="text-danger small mt-1">{{ errors.licence_number }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Location & Contact -->
+                            <hr class="my-4">
+                            <h5 class="mb-3">Location & Contact Details</h5>
+
+                            <div class="mb-3 city-wrapper">
+                                <label for="citySearch" class="form-label">City / Area</label>
+
+                                <input type="text" id="citySearch" class="form-control no-validation"
+                                       placeholder="Start typing your area" autocomplete="off"
+                                       value="{{ form_data.city_area|default_if_none:'' }}">
+
+                                <input type="hidden" id="city" name="city_area"
+                                       value="{{ form_data.city_area|default_if_none:'' }}" required>
+
+                                <div class="invalid-feedback" id="cityError" style="display:none;">
+                                    Please select your city / area.
+                                </div>
+
+                                <div id="cityMenu" class="dropdown-menu city-dropdown-menu">
+
+                                    <!-- Capital Governorate -->
+                                    <div class="city-group-title">Capital Governorate</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Manama">Manama</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Juffair">Juffair</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Adliya">Adliya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Hoora">Hoora</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Gudaibiya">Gudaibiya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Ras Rumman">Ras Rumman</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Zinj">Zinj</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Segaya">Segaya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Mahooz">Mahooz</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Umm Al Hassam">Umm Al Hassam</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Bilad Al Qadeem">Bilad Al Qadeem</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Khamis">Khamis</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sanabis">Sanabis</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Jid Ali">Jid Ali</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Nabih Saleh">Nabih Saleh</button>
+
+                                    <!-- Sitra Island & Villages -->
+                                    <div class="city-group-title">Sitra Island & Villages</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sitra">Sitra</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Wadiyan">Wadiyan</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Kharijiya">Al Kharijiya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Qaryah">Al Qaryah</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Mahazza">Mahazza</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Ma’ameer">Ma’ameer</button>
+
+                                    <!-- Muharraq Governorate -->
+                                    <div class="city-group-title">Muharraq Governorate</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Muharraq">Muharraq</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Busaiteen">Busaiteen</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Arad">Arad</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Hidd">Hidd</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Qalali">Qalali</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Dair">Dair</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Samaheej">Samaheej</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Amwaj Islands">Amwaj Islands</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Dilmunia Island">Dilmunia Island</button>
+
+                                    <!-- Northern Governorate -->
+                                    <div class="city-group-title">Northern Governorate</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Budaiya">Budaiya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Barbar">Barbar</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Saar">Saar</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Janabiyah">Janabiyah</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Jannusan">Jannusan</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Jasra">Al Jasra</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Markh">Al Markh</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Hamala">Hamala</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Shakhura">Shakhura</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Duraz (Diraz)">Duraz (Diraz)</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Abu Saiba">Abu Saiba</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Abu Baham">Abu Baham</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Bani Jamra">Bani Jamra</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Qadam">Al Qadam</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Hajar">Al Hajar</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Karrana">Karrana</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sehla (East & West)">Sehla (East & West)</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Jidhafs">Jidhafs</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Daih">Al Daih</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Lawzi">Al Lawzi</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Qurayya">Al Qurayya</button>
+
+                                    <!-- Southern Governorate -->
+                                    <div class="city-group-title">Southern Governorate</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Riffa (East/West)">Riffa (East/West)</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Isa Town">Isa Town</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Awali">Awali</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Askar">Askar</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Jaww">Jaww</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Zallaq">Zallaq</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sakhir">Sakhir</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Wadi Al Sail">Wadi Al Sail</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Salmabad">Salmabad</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Tubli">Tubli</button>
+
+                                    <!-- Extra Areas -->
+                                    <div class="city-group-title">Additional Areas</div>
+                                    <button type="button" class="city-item dropdown-item" data-value="Karzakan">Karzakan</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Malkiya">Malkiya</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sadad">Sadad</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Sanad">Sanad</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Tashan">Tashan</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Suwayfiyah">Suwayfiyah</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Musalla">Al Musalla</button>
+                                    <button type="button" class="city-item dropdown-item" data-value="Al Burhama">Al Burhama</button>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="full_address" class="form-label">Full Address</label>
+                                <textarea id="full_address" name="full_address" class="form-control" rows="3"
+                                          placeholder="Building, road, block, landmark..." required>{{ form_data.full_address|default_if_none:'' }}</textarea>
+                                <div class="invalid-feedback">
+                                    Please enter the full address.
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Main Hospital Phone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+973</span>
+                                        <input type="tel" id="phone" name="phone" class="form-control"
+                                               placeholder="XXXX XXXX"
+                                               value="{{ form_data.phone|default_if_none:'' }}"
+                                               required pattern="^[0-9]{8}$" maxlength="8">
+                                        <div class="invalid-feedback">
+                                            Please enter a valid phone number (8 digits).
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Official Hospital Email</label>
+                                    <input type="email" id="email" name="email" class="form-control"
+                                           placeholder="bloodbank@hospital.bh"
+                                           value="{{ form_data.email|default_if_none:'' }}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid email.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact person -->
+                            <hr class="my-4">
+                            <h5 class="mb-3">Contact Person (Blood Bank / Admin)</h5>
+                            <p class="text-muted small mb-3">
+                                This person will receive requests and manage the blood bank on RedPulseBH.
+                            </p>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="contact_name" class="form-label">Contact Name</label>
+                                    <input type="text" id="contact_name" name="contact_name" class="form-control"
+                                           placeholder="e.g. Mohammed Ali"
+                                           value="{{ form_data.contact_name|default_if_none:'' }}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter the contact person name.
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contact_role" class="form-label">Position / Role</label>
+                                    <input type="text" id="contact_role" name="contact_role" class="form-control"
+                                           placeholder="e.g. Blood Bank Coordinator"
+                                           value="{{ form_data.contact_role|default_if_none:'' }}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter the role.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="contact_phone" class="form-label">Contact Phone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">+973</span>
+                                        <input type="tel" id="contact_phone" name="contact_phone" class="form-control"
+                                               placeholder="XXXX XXXX"
+                                               value="{{ form_data.contact_phone|default_if_none:'' }}"
+                                               required pattern="^[0-9]{8}$" maxlength="8">
+                                        <div class="invalid-feedback">
+                                            Please enter a valid contact phone.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="contact_email" class="form-label">Contact Email</label>
+                                    <input type="email" id="contact_email" name="contact_email" class="form-control"
+                                           placeholder="contact@hospital.bh"
+                                           value="{{ form_data.contact_email|default_if_none:'' }}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid contact email.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account / password -->
+                            <hr class="my-4">
+                            <div class="account-section mb-3">
+                                <h5 class="mb-1">
+                                    <i class="bi bi-hospital"></i>
+                                    Create Hospital Admin Account
+                                </h5>
+                                <p class="text-muted small mb-3">
+                                    These credentials will be used by the hospital administrator to log in
+                                    to the RedPulseBH hospital dashboard.
+                                </p>
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" id="password" name="password" class="form-control"
+                                               required minlength="6" placeholder="Create a password">
+                                        <div class="invalid-feedback">
+                                            Please enter a password (at least 6 characters).
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" id="confirmPassword" class="form-control" required
+                                               placeholder="Re-enter password">
+                                        <div class="invalid-feedback">
+                                            Passwords must match.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Consent -->
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="termsConsent" required>
+                                <label class="form-check-label" for="termsConsent">
+                                    I confirm that this hospital is licensed in Bahrain and that the
+                                    information provided is accurate.
+                                </label>
+                                <div class="invalid-feedback">
+                                    Please confirm that the information is accurate.
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-flex justify-content-between align-items-center gap-2">
+                                <a href="/" class="btn btn-outline-secondary btn-pill">
+                                    <i class="bi bi-arrow-left me-1"></i> Back to Home
+                                </a>
+                                <button type="submit" class="btn btn-danger btn-pill">
+                                    <i class="bi bi-check-circle me-1"></i> Submit Hospital Application
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container text-center">
+            <small>
+                &copy; <span id="year"></span> RedPulseBH · Bahrain Blood Donation Platform
+            </small>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        (function () {
+            'use strict';
+            const form = document.querySelector('.needs-validation');
+            if (!form) return;
+
+            form.addEventListener('submit', function (event) {
+                const cityHidden = document.getElementById('city');
+                const cityError = document.getElementById('cityError');
+                const password = document.getElementById('password');
+                const confirmPassword = document.getElementById('confirmPassword');
+
+                confirmPassword.setCustomValidity('');
+
+                let cityValid = !!cityHidden.value;
+                cityError.style.display = cityValid ? 'none' : 'block';
+
+                let passwordsMatch = password.value === confirmPassword.value;
+                if (!passwordsMatch) {
+                    confirmPassword.setCustomValidity('Passwords must match');
+                }
+
+                if (!form.checkValidity() || !cityValid || !passwordsMatch) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                }
+            }, false);
+        })();
+
+        const citySearch = document.getElementById('citySearch');
+        const cityHidden = document.getElementById('city');
+        const cityMenu = document.getElementById('cityMenu');
+        const cityError = document.getElementById('cityError');
+
+        function openCityMenu() {
+            cityMenu.classList.add('show');
+        }
+
+        function closeCityMenu() {
+            cityMenu.classList.remove('show');
+        }
+
+        if (citySearch) {
+            citySearch.addEventListener('focus', openCityMenu);
+            citySearch.addEventListener('click', openCityMenu);
+
+            citySearch.addEventListener('input', function () {
+                const filter = citySearch.value.toLowerCase().trim();
+                const items = cityMenu.querySelectorAll('.city-item');
+
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(filter) ? 'block' : 'none';
+                });
+
+                openCityMenu();
+            });
+        }
+
+        if (cityMenu) {
+            cityMenu.addEventListener('click', function (e) {
+                const btn = e.target.closest('.city-item');
+                if (!btn) return;
+
+                const value = btn.getAttribute('data-value');
+                citySearch.value = value;
+                cityHidden.value = value;
+                cityError.style.display = 'none';
+                closeCityMenu();
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!cityMenu.contains(e.target) && e.target !== citySearch) {
+                closeCityMenu();
+            }
+        });
+    </script>
+
+</body>
+</html>

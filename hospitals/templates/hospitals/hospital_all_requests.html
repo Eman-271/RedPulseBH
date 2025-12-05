@@ -1,0 +1,276 @@
+{% load static tz %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedPulseBH – All Blood Requests</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rp-primary: #7a0013;
+            --rp-primary-dark: #3a0007;
+            --rp-accent: #ffc107;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .page-header {
+            background: radial-gradient(circle at top left, #9c0020, var(--rp-primary-dark));
+            color: #fff;
+            padding: 2.2rem 0 2.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin-bottom: 0;
+            max-width: 640px;
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+            padding-inline: 1.3rem;
+        }
+
+        .badge-soft {
+            border-radius: 999px;
+            padding: .2rem .6rem;
+            font-size: .7rem;
+        }
+
+        .badge-soft-critical {
+            background-color: #fdeaea;
+            color: #b00020;
+        }
+
+        .badge-soft-high {
+            background-color: #ffe5e5;
+            color: #d32f2f;
+        }
+
+        .badge-soft-medium {
+            background-color: #fff8e1;
+            color: #bfa300;
+        }
+
+        .badge-soft-normal {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pill {
+            border-radius: 999px;
+            font-size: .72rem;
+            padding: .15rem .7rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .status-open {
+            background-color: #e7f5ff;
+            color: #0b7285;
+            border-color: #d0ebff;
+        }
+
+        .status-closed {
+            background-color: #f1f3f5;
+            color: #495057;
+            border-color: #dee2e6;
+        }
+
+        footer {
+            background: #111;
+            color: #ccc;
+            padding: .9rem 0;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">RedPulseBH</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#how">How it works</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#stats">Statistics</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#faq">FAQ</a></li>
+
+                <li class="nav-item ms-lg-3">
+                    <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'donor_login' %}">
+                        Donor Login
+                    </a>
+                </li>
+
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-light btn-sm btn-pill" href="{% url 'hospital_dashboard' %}">
+                        Hospital Portal
+                    </a>
+                </li>
+
+                <li class="nav-item ms-lg-2">
+                    <a class="btn btn-danger btn-sm btn-pill" href="{% url 'hospital_logout' %}">
+                        <i class="bi bi-box-arrow-right me-1"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- HEADER -->
+<header class="page-header">
+    <div class="container">
+        <p class="text-uppercase small mb-1" style="letter-spacing:.12em; opacity:.85;">
+            Hospital Portal · {{ hospital.name }}
+        </p>
+        <h1 class="mb-2">All blood requests</h1>
+        <p class="opacity-75">
+            Full list of blood requests submitted by {{ hospital.name }}.
+            Use this view to review older cases and update their status.
+        </p>
+    </div>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="pb-5 flex-fill">
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Requests history</h5>
+            <a href="{% url 'hospital_request_create' %}" class="btn btn-danger btn-pill">
+                <i class="bi bi-plus-circle me-1"></i> New blood request
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="small text-muted">
+                        <tr>
+                            <th>Request</th>
+                            <th>Blood</th>
+                            <th>Urgency</th>
+                            <th>Status</th>
+                            <th>Posted</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody class="small">
+                        {% if blood_requests %}
+                            {% for req in blood_requests %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">
+                                            {{ req.title|default:"Blood request" }}
+                                        </div>
+                                        {% if req.notes %}
+                                            <div class="text-muted">
+                                                {{ req.notes }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ req.blood_type_needed|default:"–" }}
+                                        {% if req.units %}
+                                            · {{ req.units }} units
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% with req.urgency|lower as urg %}
+                                            {% if urg == "critical" %}
+                                                <span class="badge-soft badge-soft-critical">Critical</span>
+                                            {% elif urg == "high" %}
+                                                <span class="badge-soft badge-soft-high">High</span>
+                                            {% elif urg == "medium" %}
+                                                <span class="badge-soft badge-soft-medium">Medium</span>
+                                            {% else %}
+                                                <span class="badge-soft badge-soft-normal">
+                                                    {{ req.urgency|default:"Normal" }}
+                                                </span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+
+                                    <td>
+                                        {% if req.is_active %}
+                                            <span class="status-pill status-open">Open</span>
+                                        {% else %}
+                                            <span class="status-pill status-closed">Closed</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                       {{ req.created_at|localtime|date:"d M Y, h:i A" }}
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a href="{% url 'hospital_request_update' req.id %}"
+                                           class="btn btn-outline-secondary btn-sm btn-pill">
+                                            View / update
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No blood requests have been created yet.
+                                    Use <strong>“New blood request”</strong> to publish your first case.
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container text-center">
+        <small>&copy; 2025 RedPulseBH · Hospital Portal</small>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

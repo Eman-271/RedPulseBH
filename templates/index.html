@@ -1,0 +1,861 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedPulseBH – Blood Donation in Bahrain</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --rp-primary: #7a0013;
+            --rp-primary-dark: #3a0007;
+            --rp-accent: #ffc107;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+            padding-left: 1.3rem;
+            padding-right: 1.3rem;
+            transition: transform .18s ease, box-shadow .18s ease,
+                background-color .18s ease, color .18s ease;
+        }
+
+        .btn-pill:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+        }
+
+        .btn-outline-light.btn-pill:hover {
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .btn-light.btn-pill:hover {
+            background-color: #ffe9ec;
+            color: var(--rp-primary-dark);
+        }
+
+        .btn-outline-danger.btn-pill:hover {
+            background-color: var(--rp-primary);
+            color: #fff;
+        }
+
+        /* HERO */
+        .hero {
+            background: radial-gradient(circle at top left, #9c0020, var(--rp-primary-dark));
+            padding: 3rem 0 3.5rem;
+            color: #fff;
+        }
+
+        .hero-tag {
+            background-color: var(--rp-accent);
+            color: #212529;
+            font-size: .8rem;
+            font-weight: 600;
+            padding: .3rem .75rem;
+            border-radius: 999px;
+        }
+
+        .hero-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            margin-bottom: .75rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.05rem;
+            opacity: .95;
+        }
+
+        .hero-stat {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        /* Card that shows the current urgent request */
+        .hero-alert-card {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            padding: 1.75rem 1.5rem;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Section titles */
+        .section-label {
+            text-transform: uppercase;
+            letter-spacing: .11em;
+            font-size: .75rem;
+            font-weight: 600;
+            color: var(--rp-primary);
+        }
+
+        .section-heading {
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        /* Scroll reveal animation */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity .6s ease-out, transform .6s ease-out;
+        }
+
+        .fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Generic cards used in "How it works" / services / partners */
+        .rp-card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+        }
+
+        .rp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.15);
+            background: linear-gradient(135deg, #ffffff, #fff5f5);
+        }
+
+        .rp-card-header {
+            display: flex;
+            align-items: center;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .rp-chip {
+            display: inline-block;
+            padding: 0.25rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(122, 0, 19, 0.10);
+            font-size: 0.8rem;
+            color: var(--rp-primary);
+            position: relative;
+            top: 10px;
+        }
+
+        /* Stats cards on the "Impact" section */
+        .stat-box {
+            background: #fff;
+            border-radius: .9rem;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+            cursor: default;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+            background: linear-gradient(135deg, #ffffff, #fff5f5);
+        }
+
+        .stat-number {
+            transition: color .2s ease;
+        }
+
+        .stat-box:hover .stat-number {
+            color: var(--rp-primary);
+        }
+
+        .stat-icon {
+            transition: transform .2s ease, color .2s ease;
+        }
+
+        .stat-box:hover .stat-icon {
+            transform: scale(1.1);
+            color: var(--rp-primary);
+        }
+
+        /* FAQ accordion */
+        .accordion-button:not(.collapsed) {
+            background-color: #fff5f5;
+            color: var(--rp-primary);
+        }
+
+        /* Call-to-action block at the bottom */
+        .cta-block {
+            background: linear-gradient(135deg, var(--rp-primary-dark), #9c0020);
+            color: #fff;
+            border-radius: 1.5rem;
+            padding: 2.2rem 1.8rem;
+        }
+
+        /* Footer styling */
+        footer {
+            background: #111;
+            color: #ccc;
+            padding: .9rem 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MAIN NAVBAR (top navigation for the public site) -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">RedPulseBH</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#how">How it works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#stats">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#faq">FAQ</a></li>
+
+                    <!-- Portal shortcuts -->
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'donor_login' %}">
+                            Donor Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'hospital_login' %}">
+                            Hospital Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm btn-pill" href="{% url 'donor_signup' %}">
+                            Donor Sign Up
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm btn-pill" href="{% url 'hospital_signup' %}">
+                            Hospital Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION (intro + main CTA buttons + urgent request box) -->
+    <header id="top" class="hero">
+        <div class="container">
+            <div class="row align-items-center g-4">
+                <!-- Left side: text + CTAs -->
+                <div class="col-lg-7">
+                    <div class="hero-tag">Bahrain · Blood Donation</div>
+
+                    <h1 class="hero-title">Saving lives made simpler.</h1>
+
+                    <p class="hero-subtitle">
+                        RedPulseBH is Bahrain’s dedicated digital platform for voluntary blood donation.
+                        We connect donors with hospitals and health centres across the Kingdom, ensuring
+                        that lifesaving blood is available whenever and wherever it is needed.
+                    </p>
+
+                    <div class="mt-3 d-flex flex-wrap gap-2">
+                        <a href="{% url 'donor_signup' %}" class="btn btn-light btn-pill">
+                            <i class="bi bi-person-plus me-1"></i> Become a Donor
+                        </a>
+                        <a href="{% url 'public_blood_requests' %}" class="btn btn-outline-light btn-pill">
+                            <i class="bi bi-exclamation-octagon me-1"></i>
+                            View Blood Requests
+                        </a>
+                    </div>
+
+                    <!-- Small helper stats under hero -->
+                    <div class="mt-4 d-flex flex-wrap gap-4">
+                        <div>
+                            <div class="hero-stat">15 minutes</div>
+                            <small class="text-white-50">Average time to locate a donor</small>
+                        </div>
+                        <div>
+                            <div class="hero-stat">4 lives</div>
+                            <small class="text-white-50">Supported by one donation</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: urgent request summary card -->
+                <div class="col-lg-5">
+                    <div class="hero-alert-card">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 d-flex align-items-center">
+                                <i class="bi bi-bell-fill text-danger me-1 fs-5"></i>
+                                Current Urgent Requests
+                            </h6>
+                            <span class="badge px-3 py-1"
+                                style="background:#ffe5e8; color:#b00020; font-size:0.75rem; border-radius:20px;">
+                                Updated
+                            </span>
+                        </div>
+
+                        {% if urgent_request %}
+                        <!-- When we have at least one active request -->
+                        <p class="mb-2 text-muted small">Most recent active request</p>
+
+                        <h5 class="fw-bold mb-2" style="color:#7a0013;">
+                            {{ urgent_request.title }}
+                        </h5>
+
+                        <p class="mb-1 text-muted">
+                            <i class="bi bi-hospital me-1"></i>
+                            {{ urgent_request.hospital.name }}
+                            {% if urgent_request.city %}
+                            · {{ urgent_request.city }}
+                            {% endif %}
+                        </p>
+
+                        <p class="mb-1" style="color:#111;">
+                            <i class="bi bi-droplet-half text-danger me-1"></i>
+                            <strong style="color:#7a0013;">{{ urgent_request.blood_type_needed }}</strong>
+                            {% if urgent_request.units %}
+                            <span style="color:#111;">· {{ urgent_request.units }} units</span>
+                            {% endif %}
+                        </p>
+
+                        <p class="mb-1" style="color:#111;">
+                            <i class="bi bi-exclamation-triangle text-warning me-1"></i>
+                            <span class="fw-semibold" style="color:#7a0013;">
+                                Urgency:
+                                {% if urgent_request.get_urgency_display %}
+                                {{ urgent_request.get_urgency_display }}
+                                {% else %}
+                                {{ urgent_request.urgency|capfirst }}
+                                {% endif %}
+                            </span>
+                        </p>
+                        <p class="mb-0 text-muted small">
+                            <i class="bi bi-clock me-1"></i>
+                            Posted {{ urgent_request.created_at|date:"d M Y, h:i A" }}
+                        </p>
+                        {% else %}
+                        <!-- When there is no urgent request yet -->
+                        <div class="text-muted small">
+                            There are no urgent requests published yet. Once verified hospitals start
+                            using RedPulseBH, their approved urgent requests will appear here.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how" class="py-5 fade-section">
+        <div class="container">
+            <p class="section-label text-center">Process</p>
+            <h2 class="section-heading text-center mb-4">How RedPulseBH Works</h2>
+
+            <div class="row g-4">
+                <!-- Step 1 -->
+                <div class="col-md-4">
+                    <div class="bg-white p-3 rounded-4 shadow-sm rp-card">
+                        <div class="mb-2">
+                            <i class="bi bi-person-plus text-danger fs-4"></i>
+                        </div>
+                        <h5>1. Register as a Donor</h5>
+                        <p>Create your profile so hospitals can identify your blood type and eligibility quickly.</p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="col-md-4">
+                    <div class="bg-white p-3 rounded-4 shadow-sm rp-card">
+                        <div class="mb-2">
+                            <i class="bi bi-hospital text-danger fs-4"></i>
+                        </div>
+                        <h5>2. Hospitals Submit Requests</h5>
+                        <p>Authorized hospitals post urgent or scheduled requests for specific blood types.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="col-md-4">
+                    <div class="bg-white p-3 rounded-4 shadow-sm rp-card">
+                        <div class="mb-2">
+                            <i class="bi bi-heart-pulse text-danger fs-4"></i>
+                        </div>
+                        <h5>3. Donors Respond & Donate</h5>
+                        <p>Matching donors are notified and can coordinate their donation with the hospital.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION (Donor side + Hospital side) -->
+    <section id="services" class="pb-5 fade-section">
+        <div class="container">
+            <div class="row g-4">
+
+                <!-- Donor benefits -->
+                <div class="col-lg-6">
+                    <div class="card rp-card h-100">
+                        <div class="card-header rp-card-header d-flex justify-content-between">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="bi bi-people-fill text-danger me-1"></i>
+                                    For Donors
+                                </h5>
+                                <small class="text-muted">Support patients across Bahrain</small>
+                            </div>
+                            <span class="rp-chip">Voluntary</span>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="mb-3">
+                                <li>Register securely with your blood group and contact details.</li>
+                                <li>Receive notifications when your blood type is needed.</li>
+                                <li>View urgent and upcoming requests near you.</li>
+                                <li>Track your past donations and next eligible date.</li>
+                            </ul>
+
+                            <a href="{% url 'donor_signup' %}" class="btn btn-light btn-pill">
+                                <i class="bi bi-person-plus me-1"></i> Become a Donor
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hospital benefits -->
+                <div class="col-lg-6">
+                    <div class="card rp-card h-100">
+                        <div class="card-header rp-card-header d-flex justify-content-between">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="bi bi-building-check text-danger me-1"></i>
+                                    For Hospitals
+                                </h5>
+                                <small class="text-muted">Faster donor access & coordination</small>
+                            </div>
+                            <span class="rp-chip">Healthcare</span>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="mb-3">
+                                <li>Submit and manage urgent blood requests.</li>
+                                <li>Reach eligible donors in seconds.</li>
+                                <li>Monitor request status and donor responses.</li>
+                                <li>Improve communication and reduce delays.</li>
+                            </ul>
+
+                            <a href="{% url 'hospital_login' %}" class="btn btn-danger btn-pill">
+                                <i class="bi bi-plus-circle me-1"></i> Hospital Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- STATISTICS / IMPACT SECTION -->
+    <section id="stats" class="pb-5 fade-section">
+        <div class="container">
+            <p class="section-label text-center">Impact</p>
+            <h2 class="section-heading text-center mb-4">Bahrain’s Lifesaving Network in Numbers</h2>
+
+            <div class="row g-4">
+
+                <!-- REGISTERED DONORS – uses value from the database -->
+                <div class="col-md-4">
+                    <div class="stat-box" title="Total number of donors registered on RedPulseBH">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">Registered Donors</div>
+                                <div class="display-6 text-danger stat-number"
+                                    data-target="{{ registered_donors|default:'0' }}">
+                                    {{ registered_donors|default:'0' }}
+                                </div>
+                            </div>
+                            <i class="bi bi-people-fill text-danger fs-2 stat-icon"></i>
+                        </div>
+                        <div class="mt-2 small text-muted">Nationwide participation</div>
+                    </div>
+                </div>
+
+                <!-- REQUESTS FULFILLED – number of closed blood requests -->
+                <div class="col-md-4">
+                    <div class="stat-box" title="Blood requests successfully matched with donors">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">Requests Fulfilled</div>
+                                <div class="display-6 text-danger stat-number"
+                                    data-target="{{ fulfilled_requests|default:'0' }}">
+                                    {{ fulfilled_requests|default:'0' }}
+                                </div>
+                            </div>
+                            <i class="bi bi-hospital fs-2 text-danger stat-icon"></i>
+                        </div>
+                        <div class="mt-2 small text-muted">Successful donor matches</div>
+                    </div>
+                </div>
+
+                <!-- PARTNER FACILITIES – number of hospitals in the system -->
+                <div class="col-md-4">
+                    <div class="stat-box" title="Hospitals and health centres partnered with RedPulseBH">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">Partner Facilities</div>
+                                <div class="display-6 text-danger stat-number"
+                                    data-target="{{ partner_facilities|default:'0' }}">
+                                    {{ partner_facilities|default:'0' }}
+                                </div>
+                            </div>
+                            <i class="bi bi-geo-alt fs-2 text-danger stat-icon"></i>
+                        </div>
+                        <div class="mt-2 small text-muted">Hospitals &amp; health centres</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNER HOSPITALS LIST (static illustrative content) -->
+    <section id="partners" class="pb-5 fade-section">
+        <div class="container">
+            <p class="section-label text-center">Network</p>
+            <h2 class="section-heading text-center mb-4">Partner Hospitals in Bahrain</h2>
+
+            <div class="row g-4">
+                <!-- Public hospitals -->
+                <div class="col-lg-4">
+                    <div class="card rp-card h-100">
+                        <div class="card-header rp-card-header">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="bi bi-hospital text-danger me-1"></i>
+                                    Public Hospitals
+                                </h5>
+                                <small class="text-muted">Ministry of Health</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0 small">
+                                <li>Salmaniya Medical Complex (SMC)</li>
+                                <li>King Hamad University Hospital (KHUH)</li>
+                                <li>Bahrain Defence Force Hospital (BDF)</li>
+                                <li>Jidhafs Maternity Hospital</li>
+                                <li>Psychiatric Hospital</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Private sector hospitals -->
+                <div class="col-lg-4">
+                    <div class="card rp-card h-100">
+                        <div class="card-header rp-card-header">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="bi bi-building text-danger me-1"></i>
+                                    Private Hospitals &amp; Centres
+                                </h5>
+                                <small class="text-muted">Accredited partners</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0 small">
+                                <li>American Mission Hospital</li>
+                                <li>Royal Bahrain Hospital</li>
+                                <li>Ibn Al-Nafees Hospital</li>
+                                <li>KIMS Bahrain Medical Centre</li>
+                                <li>Noor Specialist Hospital</li>
+                                <li>Al Kindi Specialized Hospital</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blood bank and key units -->
+                <div class="col-lg-4">
+                    <div class="card rp-card h-100">
+                        <div class="card-header rp-card-header">
+                            <div>
+                                <h5 class="mb-0">
+                                    <i class="bi bi-droplet-half text-danger me-1"></i>
+                                    Blood Bank &amp; Key Units
+                                </h5>
+                                <small class="text-muted">Donation &amp; transfusion</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="mb-0 small">
+                                <li>Central Blood Bank – SMC</li>
+                                <li>Riffa Health Centre</li>
+                                <li>Muharraq Health Centre</li>
+                                <li>Isa Town Health Centre</li>
+                                <li>Regional health centres (MOH)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="text-center small text-muted mt-3 mb-0">
+                Partner list shown for illustration. Actual integrations are managed and verified by the RedPulseBH
+                team.
+            </p>
+        </div>
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section id="faq" class="pb-5 fade-section">
+        <div class="container">
+            <p class="section-label text-center">Support</p>
+            <h2 class="section-heading text-center mb-4">Frequently Asked Questions</h2>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion" id="faqAccordion">
+
+                        <!-- Q1 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q1">
+                                <button class="accordion-button" data-bs-toggle="collapse" data-bs-target="#a1">
+                                    Is RedPulseBH affiliated with any government authority?
+                                </button>
+                            </h2>
+                            <div id="a1" class="accordion-collapse collapse show">
+                                <div class="accordion-body">
+                                    RedPulseBH works alongside participating healthcare facilities in Bahrain to support
+                                    voluntary blood donation and improve response times for urgent medical needs.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q2">
+                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                    data-bs-target="#a2">
+                                    What information do I need to register as a donor?
+                                </button>
+                            </h2>
+                            <div id="a2" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Donors provide their name, age, blood group, city, contact details and relevant
+                                    health information to ensure safe and accurate matching.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q3">
+                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                    data-bs-target="#a3">
+                                    How do hospitals use RedPulseBH?
+                                </button>
+                            </h2>
+                            <div id="a3" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Authorized medical personnel can submit, update or cancel blood requests,
+                                    view donor responses and manage communication efficiently.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q4">
+                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                    data-bs-target="#a4">
+                                    Will I only see requests for my blood type?
+                                </button>
+                            </h2>
+                            <div id="a4" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    All requests are visible, but those matching your blood type, location and
+                                    eligibility
+                                    will be highlighted for easier response.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q5 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="q5">
+                                <button class="accordion-button collapsed" data-bs-toggle="collapse"
+                                    data-bs-target="#a5">
+                                    Is my information kept confidential?
+                                </button>
+                            </h2>
+                            <div id="a5" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    Yes. Personal details are protected and shared only with authorized hospitals
+                                    to coordinate safe and timely donations.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4 small text-muted">
+                        Donor and hospital portals are accessed via the login buttons in the top navigation bar.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CALL-TO-ACTION BEFORE FOOTER -->
+    <section class="pb-5 fade-section">
+        <div class="container">
+            <div class="cta-block d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h3 class="mb-1">Join Bahrain’s Lifesaving Community</h3>
+                    <p class="mb-0">Register today or partner your hospital with RedPulseBH.</p>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'donor_signup' %}" class="btn btn-light btn-pill">
+                        <i class="bi bi-person-heart me-1"></i> Register as a Donor
+                    </a>
+                    <a href="{% url 'hospital_login' %}" class="btn btn-outline-light btn-pill">
+                        <i class="bi bi-hospital me-1"></i> Hospital Access
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER (simple dynamic year) -->
+    <footer>
+        <div class="container text-center">
+            <small>
+                &copy; <span id="year"></span> RedPulseBH · Bahrain’s Voluntary Blood Donation Platform
+            </small>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set footer year dynamically
+            const yearSpan = document.getElementById("year");
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // ----------- Animated stats count-up (using data-target) -----------
+            const counters = document.querySelectorAll('.stat-number');
+
+            function animateCounter(el) {
+                // Read target value from data-target or fall back to text content
+                const rawTarget = el.dataset.target ?? el.textContent;
+                const target = Number(rawTarget);
+
+                // If not a valid number -> show 0 and stop
+                if (!Number.isFinite(target)) {
+                    el.textContent = '0';
+                    return;
+                }
+
+                const duration = 800;  // ms
+                const start = performance.now();
+
+                function step(now) {
+                    const progress = Math.min((now - start) / duration, 1);
+                    const current = Math.round(target * progress);
+                    el.textContent = current.toLocaleString();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        el.textContent = target.toLocaleString();
+                    }
+                }
+
+                requestAnimationFrame(step);
+            }
+
+            const statsSection = document.getElementById('stats');
+
+            // Run the counter animation when the stats section enters the viewport
+            if ('IntersectionObserver' in window && statsSection) {
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            counters.forEach(counter => {
+                                if (!counter.dataset.animated) {
+                                    animateCounter(counter);
+                                    counter.dataset.animated = 'true';
+                                }
+                            });
+                            obs.unobserve(statsSection);
+                        }
+                    });
+                }, { threshold: 0.4 });
+
+                observer.observe(statsSection);
+            } else {
+                // Fallback: animate immediately if IntersectionObserver is not supported
+                counters.forEach(animateCounter);
+            }
+
+            // ----------- Scroll reveal for sections -----------
+            const revealSections = document.querySelectorAll('.fade-section');
+
+            if ('IntersectionObserver' in window && revealSections.length) {
+                const sectionObserver = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2 });
+
+                revealSections.forEach(sec => sectionObserver.observe(sec));
+            } else {
+                revealSections.forEach(sec => sec.classList.add('visible'));
+            }
+        });
+    </script>
+
+</body>
+
+</html>

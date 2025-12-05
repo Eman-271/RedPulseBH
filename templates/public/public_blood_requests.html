@@ -1,0 +1,204 @@
+{% load static tz %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedPulseBH – Blood Requests</title>
+
+    <!-- Bootstrap + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f5f5f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .page-header {
+            background: radial-gradient(circle at top left, #9c0020, #3a0007);
+            color: #fff;
+            padding: 2.2rem 0 2.6rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+        }
+
+        .badge-soft {
+            border-radius: 999px;
+            padding: .2rem .6rem;
+            font-size: .7rem;
+        }
+
+        .badge-soft-critical {
+            background: #fdeaea;
+            color: #b00020;
+        }
+
+        .badge-soft-high {
+            background: #ffe5e5;
+            color: #d32f2f;
+        }
+
+        .badge-soft-medium {
+            background: #fff8e1;
+            color: #bfa300;
+        }
+
+        .badge-soft-normal {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .requests-card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-state {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">RedPulseBH</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'donor_login' %}">
+                            Donor Login
+                        </a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm btn-pill" href="{% url 'hospital_login' %}">
+                            Hospital Portal
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <div class="container">
+            <h1 class="mb-1">Active blood requests</h1>
+            <p class="mb-0">
+                Browse all active requests submitted by hospitals.
+                Donors can log in to see which requests match their blood type.
+            </p>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pb-5 flex-fill">
+        <div class="container" style="max-width: 900px;">
+
+            <div class="card requests-card">
+                <div class="card-body">
+
+                    {% if active_requests %}
+                    <div class="list-group list-group-flush">
+                        {% for req in active_requests %}
+                        <div class="list-group-item py-3">
+                            <div class="d-flex justify-content-between align-items-start">
+
+                                <div class="me-3">
+                                    <h5 class="mb-1">{{ req.title }}</h5>
+
+                                    <div class="text-muted small mb-1">
+                                        <i class="bi bi-hospital me-1"></i>
+                                        {{ req.hospital.name }}
+                                        {% if req.city %}
+                                        · {{ req.city }}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="small mb-1">
+                                        <!-- الأيقونة اللي تبينها -->
+                                        <span class="me-2">
+                                            <i class="bi bi-exclamation-octagon me-1"></i>
+                                            {{ req.blood_type_needed }}
+                                            {% if req.units %} · {{ req.units }} units{% endif %}
+                                        </span>
+
+                                        {% with req.urgency|lower as urg %}
+                                        {% if urg == "critical" %}
+                                        <span class="badge-soft badge-soft-critical">Critical</span>
+                                        {% elif urg == "high" %}
+                                        <span class="badge-soft badge-soft-high">High</span>
+                                        {% elif urg == "medium" %}
+                                        <span class="badge-soft badge-soft-medium">Medium</span>
+                                        {% else %}
+                                        <span class="badge-soft badge-soft-normal">Normal</span>
+                                        {% endif %}
+                                        {% endwith %}
+                                    </div>
+
+                                    {% if req.notes %}
+                                    <p class="small text-muted mt-2 mb-0">
+                                        {{ req.notes }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="text-end small text-muted">
+                                    <div>
+                                        Posted {{ req.created_at|localtime|date:"d M Y, h:i A" }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% else %}
+                    <div class="empty-state">
+                        <i class="bi bi-droplet-half fs-1 mb-2 text-danger"></i>
+                        <p class="mb-1 fw-semibold">
+                            There are currently no active blood requests in the system.
+                        </p>
+                        <p class="mb-0 small">
+                            Once verified hospitals start publishing requests, they will appear here.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-center text-white-50 py-3">
+        <small>&copy; 2025 RedPulseBH · Blood Requests</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

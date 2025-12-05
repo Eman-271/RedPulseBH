@@ -1,0 +1,490 @@
+{% load static tz %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RedPulseBH – Hospital Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --rp-primary: #7a0013;
+            --rp-primary-dark: #3a0007;
+            --rp-accent: #ffc107;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .page-header {
+            background: radial-gradient(circle at top left, #9c0020, var(--rp-primary-dark));
+            color: #fff;
+            padding: 2.2rem 0 2.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin-bottom: 0;
+            max-width: 620px;
+        }
+
+        .facility-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .4rem .9rem;
+            border-radius: 999px;
+            background-color: #fff;
+            color: #111;
+            font-size: .8rem;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+        }
+
+        .facility-pill span {
+            padding: .18rem .6rem;
+            border-radius: 999px;
+            background-color: #fcebea;
+            color: var(--rp-primary-dark);
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .card-metric-label {
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            font-size: .7rem;
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .metric-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .metric-subtext {
+            font-size: .75rem;
+            color: #6c757d;
+        }
+
+        .btn-pill {
+            border-radius: 999px;
+            padding-inline: 1.3rem;
+        }
+
+        .badge-soft {
+            border-radius: 999px;
+            padding: .2rem .6rem;
+            font-size: .7rem;
+        }
+
+        .badge-soft-critical {
+            background-color: #fdeaea;
+            color: #b00020;
+        }
+
+        .badge-soft-high {
+            background-color: #ffe5e5;
+            color: #d32f2f;
+        }
+
+        .badge-soft-medium {
+            background-color: #fff8e1;
+            color: #bfa300;
+        }
+
+        .badge-soft-normal {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pill {
+            border-radius: 999px;
+            font-size: .72rem;
+            padding: .15rem .7rem;
+            border: 1px solid #dee2e6;
+        }
+
+        .status-open {
+            background-color: #e7f5ff;
+            color: #0b7285;
+            border-color: #d0ebff;
+        }
+
+        .status-closed {
+            background-color: #f1f3f5;
+            color: #495057;
+            border-color: #dee2e6;
+        }
+
+        footer {
+            background: #111;
+            color: #ccc;
+            padding: .9rem 0;
+            margin-top: 3rem;
+        }
+
+        .small-link {
+            font-size: .8rem;
+            text-decoration: none;
+        }
+
+        .small-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">RedPulseBH</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div id="nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#how">How it works</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#stats">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#faq">FAQ</a></li>
+
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-light btn-sm btn-pill" href="{% url 'donor_login' %}">
+                            Donor Login
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-light btn-sm btn-pill" href="{% url 'hospital_dashboard' %}">
+                            Hospital Portal
+                        </a>
+                    </li>
+
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-danger btn-sm btn-pill" href="{% url 'hospital_logout' %}">
+                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-8">
+                    <p class="mb-1 text-uppercase small" style="letter-spacing:.12em; opacity:.85;">
+                        Hospital Portal
+                    </p>
+                    <h1 class="mb-2">
+                        Welcome, {{ hospital.name }}.
+                    </h1>
+                    <p class="opacity-75">
+                        Coordinate blood demand, monitor donor matches, and keep
+                        your facility information up to date.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="facility-pill">
+                        <i class="bi bi-hospital"></i>
+                        <div class="d-flex flex-column">
+                            <strong>{{ hospital.city_area }}</strong>
+                            <small class="text-muted" style="font-size:.7rem;">
+                                {{ hospital.hospital_type|title }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="pb-5">
+        <div class="container">
+
+            <!-- ROW 1: REQUEST OVERVIEW + CREATE REQUEST -->
+            <div class="row g-4 mb-3">
+                <!-- Requests overview -->
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <div class="card-metric-label mb-1">Requests overview</div>
+                                    <h5 class="mb-0">Your blood requests</h5>
+                                </div>
+                            </div>
+
+                            <div class="row text-center my-3">
+                                <div class="col-4">
+                                    <div class="metric-number text-danger">{{ request_stats.open }}</div>
+                                    <div class="metric-subtext">Open</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="metric-number text-warning">{{ request_stats.ongoing }}</div>
+                                    <div class="metric-subtext">Ongoing</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="metric-number text-muted">{{ request_stats.closed }}</div>
+                                    <div class="metric-subtext">Closed</div>
+                                </div>
+                            </div>
+
+                            <p class="small text-muted mb-3">
+                                Summary of all blood requests submitted by {{ hospital.name }}.
+                            </p>
+
+                            <a href="{% url 'hospital_all_requests' %}" class="btn btn-outline-danger btn-sm btn-pill">
+                                <i class="bi bi-list-ul me-1"></i>
+                                View all requests
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create a new request -->
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <div class="card-metric-label mb-1">Create a new blood request</div>
+                                    <h5 class="mb-0">Request blood units for your department</h5>
+                                </div>
+                            </div>
+
+                            <p class="small text-muted mb-3">
+                                Use this action whenever your team needs blood units for an emergency
+                                or scheduled case.
+                            </p>
+
+                            <a href="{% url 'hospital_request_create' %}" class="btn btn-danger btn-pill">
+                                <i class="bi bi-plus-circle me-1"></i>
+                                New blood request
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 2: CURRENT REQUESTS TABLE + FACILITY INFO -->
+            <div class="row g-4 mb-3">
+                <!-- Current blood requests table -->
+                <div class="col-lg-8">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <div class="card-metric-label mb-1">Current blood requests</div>
+                                    <h5 class="mb-0">Active &amp; recent requests</h5>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive mt-3">
+                                <table class="table align-middle mb-0">
+                                    <thead class="small text-muted">
+                                        <tr>
+                                            <th>Request</th>
+                                            <th>Blood</th>
+                                            <th>Urgency</th>
+                                            <th>Status</th>
+                                            <th>Posted</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="small">
+                                        {% if blood_requests %}
+                                        {% for req in blood_requests %}
+                                        <tr>
+                                            <td>
+                                                <div class="fw-semibold">
+                                                    {{ req.title|default:"Blood request" }}
+                                                </div>
+                                                <div class="text-muted">
+                                                    {{ req.notes|default:"" }}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ req.blood_type_needed|default:"–" }}
+                                                {% if req.units %}
+                                                · {{ req.units }} units
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% with req.urgency|lower as urg %}
+                                                {% if urg == "critical" %}
+                                                <span class="badge-soft badge-soft-critical">Critical</span>
+                                                {% elif urg == "high" %}
+                                                <span class="badge-soft badge-soft-high">High</span>
+                                                {% elif urg == "medium" %}
+                                                <span class="badge-soft badge-soft-medium">Medium</span>
+                                                {% else %}
+                                                <span class="badge-soft badge-soft-normal">
+                                                    {{ req.urgency|default:"Normal" }}
+                                                </span>
+                                                {% endif %}
+                                                {% endwith %}
+                                            </td>
+                                            <td>
+                                                {% if req.is_active %}
+                                                <span class="status-pill status-open">Open</span>
+                                                {% else %}
+                                                <span class="status-pill status-closed">Closed</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {{ req.created_at|localtime|date:"d M Y, h:i A" }}
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{% url 'hospital_request_update' req.id %}"
+                                                    class="btn btn-outline-secondary btn-sm btn-pill">
+                                                    View / update
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                No blood requests have been created yet.
+                                                Use <strong>“New blood request”</strong> to create your first one.
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {% if blood_requests %}
+                            <div class="d-flex justify-content-end mt-3 small text-muted">
+                                Showing {{ blood_requests|length }} most recent requests.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Facility details -->
+                <div class="col-lg-4">
+                    <div class="card h-100">
+                        <div class="card-header border-0 bg-transparent pb-0 d-flex align-items-center">
+                            <h6 class="mb-0">Facility details</h6>
+                            <a href="{% url 'hospital_profile_edit' %}" class="small-link ms-auto">
+                                <i class="bi bi-pencil-square me-1"></i>Edit profile
+                            </a>
+                        </div>
+                        <div class="card-body pt-2">
+                            <dl class="row mb-0 small">
+                                <dt class="col-4 text-muted">Hospital</dt>
+                                <dd class="col-8">{{ hospital.name }}</dd>
+
+                                <dt class="col-4 text-muted">Type</dt>
+                                <dd class="col-8">{{ hospital.hospital_type|title }}</dd>
+
+                                <dt class="col-4 text-muted">City / Area</dt>
+                                <dd class="col-8">{{ hospital.city_area }}</dd>
+
+                                <dt class="col-4 text-muted">Address</dt>
+                                <dd class="col-8">{{ hospital.full_address }}</dd>
+
+                                <dt class="col-4 text-muted">Phone</dt>
+                                <dd class="col-8">{{ hospital.phone }}</dd>
+
+                                <dt class="col-4 text-muted">Hospital email</dt>
+                                <dd class="col-8">
+                                    <a href="mailto:{{ hospital.email }}" class="small-link">
+                                        {{ hospital.email }}
+                                    </a>
+                                </dd>
+
+                                <dt class="col-4 text-muted">Contact</dt>
+                                <dd class="col-8">
+                                    {{ hospital.contact_name }}
+                                    {% if hospital.contact_role %}
+                                    · {{ hospital.contact_role }}
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-4 text-muted">Contact email</dt>
+                                <dd class="col-8">
+                                    <a href="mailto:{{ hospital.contact_email }}" class="small-link">
+                                        {{ hospital.contact_email }}
+                                    </a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ROW 3: SYSTEM NOTICE -->
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-info-circle text-warning me-2"></i>
+                                <h6 class="mb-0">System notice</h6>
+                            </div>
+                            <p class="small mb-2">
+                                Remember to close fulfilled requests promptly so donors stop receiving alerts
+                                and your statistics remain accurate.
+                            </p>
+                            <p class="small text-muted mb-0">
+                                Registered donors in the system:
+                                <strong>{{ registered_donors }}</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container text-center">
+            <small>
+                &copy; 2025 RedPulseBH · Hospital Portal
+            </small>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
