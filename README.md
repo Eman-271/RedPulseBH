@@ -103,7 +103,7 @@ http://127.0.0.1:8000/
 RedPulseBH/
 │── hospitals/          (Main Django App)
 │── templates/          (HTML Templates)
-│── static/             (CSS, JS, Images)
+│── static/             
 │── manage.py           (Django Management File)
 │── requirements.txt    (Installed Packages)
 │── db.json / MongoDB   (NoSQL Database)
